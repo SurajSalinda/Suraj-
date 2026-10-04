@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Order Linker</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#071526;color:#fff}
+.app{max-width:430px;margin:auto;min-height:100vh;background:#f4f7fb;color:#172033}
+header{background:#071526;color:#fff;padding:20px 18px 16px;border-radius:0 0 24px 24px}
+.brand{font-size:24px;font-weight:800}.sub{opacity:.75;font-size:13px;margin-top:4px}
+.card{background:#fff;margin:14px;border-radius:18px;padding:16px;box-shadow:0 4px 18px #00000012}
+.title{font-weight:800;font-size:16px;margin-bottom:10px}.row{display:flex;justify-content:space-between;gap:10px}
+.badge{padding:6px 9px;border-radius:10px;font-size:11px;font-weight:700;background:#e7f8ed;color:#138a43}
+.point{display:flex;gap:10px;margin:10px 0}.dot{width:11px;height:11px;border-radius:50%;margin-top:4px;background:#1685ff}.red{background:#e43b3b}
+.small{font-size:12px;color:#6b7484}.value{font-weight:700}
+button{border:0;border-radius:13px;padding:13px 16px;font-weight:800;font-size:14px;cursor:pointer}
+.primary{background:#087fdf;color:white;width:100%}.green{background:#18a957;color:white;width:100%}
+.filter{display:flex;gap:8px}.filter button{flex:1;background:#e9eef5;color:#344054}.filter .on{background:#071526;color:#fff}
+.match{border:2px solid #1bb45b}.possible{border:2px solid #f2a900}
+.metric{background:#f1f5f9;border-radius:12px;padding:10px;text-align:center;flex:1}.metric b{display:block;font-size:17px}
+.map{height:210px;border-radius:16px;background:
+linear-gradient(145deg,#dcefdc,#e9f1d8);
+position:relative;overflow:hidden}
+.road{position:absolute;width:140%;height:12px;background:#fff;transform:rotate(-27deg);left:-30px;top:95px;box-shadow:0 0 0 2px #c6d4c0}
+.route{position:absolute;width:120%;height:5px;background:#1a8cff;transform:rotate(-27deg);left:-10px;top:99px}
+.pin{position:absolute;width:18px;height:18px;border-radius:50%;background:#e83b3b;border:4px solid #fff;box-shadow:0 2px 6px #0004}
+.p1{left:23%;top:135px}.p2{left:58%;top:83px}.p3{left:77%;top:48px}
+.nav{position:sticky;bottom:0;background:#fff;border-top:1px solid #e4e8ef;display:flex;justify-content:space-around;padding:12px}
+.nav div{text-align:center;font-size:11px;color:#697386}.nav .active{color:#087fdf;font-weight:800}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand">🔗 Order Linker</div><div class="sub">One trip. Better matching. More earnings.</div></header>
+
+<section id="home">
+<div class="card">
+ <div class="row"><div class="title">🟢 Uber — Active Trip</div><span class="badge">ON GOING</span></div>
+ <div class="point"><span class="dot"></span><div><div class="small">Pickup</div><div class="value">Kandy City Centre</div></div></div>
+ <div class="point"><span class="dot red"></span><div><div class="small">Drop-off</div><div class="value">Peradeniya</div></div></div>
+ <div class="row"><div class="metric"><b>7.2 km</b><span class="small">Route</span></div><div class="metric"><b>12 min</b><span class="small">ETA</span></div></div>
+</div>
+
+<div class="card">
+ <div class="row"><div class="title">🔎 PickMe matches</div><span class="badge">3 FOUND</span></div>
+ <div class="filter"><button class="on" onclick="filter('all',this)">All</button><button onclick="filter('good',this)">Best</button><button onclick="filter('possible',this)">Possible</button></div>
+</div>
+
+<div id="orders">
+<div class="card match order good">
+ <div class="row"><div class="title">🟡 PickMe #P-102</div><span class="badge">GOOD MATCH</span></div>
+ <div class="point"><span class="dot"></span><div><div class="small">Pickup</div><div class="value">Kandy — 1.1 km away</div></div></div>
+ <div class="point"><span class="dot red"></span><div><div class="small">Drop-off</div><div class="value">Peradeniya — 0.3 km away</div></div></div>
+ <div class="row"><div><div class="small">Route deviation</div><b>0.4 km</b></div><button class="green" style="width:auto" onclick="showRoute()">Combine</button></div>
+</div>
+
+<div class="card possible order possible">
+ <div class="row"><div class="title">🟡 PickMe #P-108</div><span style="color:#a96a00;font-weight:800;font-size:12px">POSSIBLE</span></div>
+ <div class="point"><span class="dot"></span><div><div class="small">Pickup</div><div class="value">Kandy — 1.3 km away</div></div></div>
+ <div class="point"><span class="dot red"></span><div><div class="small">Drop-off</div><div class="value">Katugastota</div></div></div>
+ <div class="row"><div><div class="small">Route deviation</div><b>1.2 km</b></div><button class="primary" style="width:auto" onclick="showRoute()">View</button></div>
+</div>
+
+<div class="card order">
+ <div class="row"><div class="title">🟡 PickMe #P-115</div><span style="color:#c62828;font-weight:800;font-size:12px">NOT SUITABLE</span></div>
+ <div class="point"><span class="dot"></span><div><div class="small">Pickup</div><div class="value">Kandy — 2.0 km away</div></div></div>
+ <div class="point"><span class="dot red"></span><div><div class="small">Drop-off</div><div class="value">Digana</div></div></div>
+ <div class="small">8.5 km off route</div>
+</div>
+</div>
+</section>
+
+<section id="route" class="hidden">
+<div class="card"><div class="title">🗺️ Combined Route</div>
+<div class="map"><div class="road"></div><div class="route"></div><div class="pin p1"></div><div class="pin p2"></div><div class="pin p3"></div></div>
+</div>
+<div class="card">
+<div class="row"><div class="metric"><b>7.5 km</b><span class="small">Total</span></div><div class="metric"><b>18 min</b><span class="small">Estimated</span></div><div class="metric"><b>0.4 km</b><span class="small">Deviation</span></div></div>
+<br><button class="green" onclick="alert('Demo trip started. Live Uber/PickMe integration requires official platform API access.')">Start Combined Trip</button>
+</div>
+<div class="card"><div class="title">Route order</div>
+<div class="point"><span class="dot"></span><div><div class="small">1. Uber pickup</div><div class="value">Kandy City Centre</div></div></div>
+<div class="point"><span class="dot"></span><div><div class="small">2. PickMe pickup</div><div class="value">Kandy</div></div></div>
+<div class="point"><span class="dot red"></span><div><div class="small">3. Shared destination</div><div class="value">Peradeniya</div></div></div>
+</div>
+</section>
+
+<div class="nav"><div class="active" onclick="home()">⌂<br>Home</div><div onclick="showRoute()">🗺<br>Matches</div><div onclick="alert('Settings: API connections will be added in the live version.')">⚙<br>Settings</div></div>
+</div>
+<script>
+function filter(type,btn){document.querySelectorAll('.filter button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.querySelectorAll('.order').forEach(x=>x.style.display=(type==='all'||x.classList.contains(type))?'block':'none')}
+function showRoute(){document.getElementById('home').classList.add('hidden');document.getElementById('route').classList.remove('hidden')}
+function home(){document.getElementById('route').classList.add('hidden');document.getElementById('home').classList.remove('hidden')}
+</script>
+</body></html>
